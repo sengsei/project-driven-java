@@ -2,6 +2,7 @@ package chapter02;
 
 import java.time.Month;
 import java.util.List;
+import java.util.OptionalDouble;
 
 public class BankStatementCalc {
     private final List<BankTransaction> bankTransactions;
@@ -25,5 +26,11 @@ public class BankStatementCalc {
         return bankTransactions.stream()
                 .filter(e -> salary.equals(e.getDescription()))
                 .mapToDouble(BankTransaction::getAmount).sum();
+    }
+
+    public OptionalDouble findHighestTransactionInMonth(final Month month){
+        return  bankTransactions.stream()
+                .filter(e -> month.equals(e.getDate().getMonth()))
+                .mapToDouble(BankTransaction::getAmount).max();
     }
 }
