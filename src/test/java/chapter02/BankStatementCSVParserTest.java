@@ -36,7 +36,6 @@ class BankStatementCSVParserTest {
         List<BankTransaction> expected = List.of(t1, t2);
 
         assertEquals(expected,result);
-
     }
 
 }

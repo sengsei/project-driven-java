@@ -30,6 +30,8 @@ public class BankStatementAnalyzer {
                 + bankStatementCalc.calculateTotalInMonth(Month.FEBRUARY));
         System.out.println("The total salary received is "
                 + bankStatementCalc.calculateTotalForCategory("Salary"));
+        System.out.println("Total amount Grouped by description field: ");
+        bankStatementCalc.totalAmountGroupedByDescription().entrySet().forEach(System.out::println);
     }
 
 }
