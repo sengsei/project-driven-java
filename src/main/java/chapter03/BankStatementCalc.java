@@ -1,6 +1,7 @@
 package chapter03;
 
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
@@ -42,4 +43,9 @@ public class BankStatementCalc {
         return bankTransactions.stream()
                 .collect(groupingBy(BankTransaction::getDescription, summingDouble(BankTransaction::getAmount)));
     }
+
+    public List<BankTransaction> findTransactions(final BankTransactionFilter bankTransactionFilter){
+        return bankTransactions.stream().filter(bankTransactionFilter::test).toList();
+    }
+
 }
