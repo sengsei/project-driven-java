@@ -1,10 +1,7 @@
 package chapter03;
 
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.OptionalDouble;
+import java.util.*;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.summingDouble;
@@ -16,35 +13,36 @@ public class BankStatementCalc {
         this.bankTransactions = bankTransactions;
     }
 
-    public double calculateTotalAmount() {
-        return bankTransactions.
-                stream().mapToDouble(BankTransaction::getAmount).sum();
+    public SummaryStatistics summaryStatistics() {
+        final DoubleSummaryStatistics doubleSummaryStatistics = bankTransactions.stream()
+                .mapToDouble(BankTransaction::getAmount)
+                .summaryStatistics();
+        return new SummaryStatistics(
+                doubleSummaryStatistics.getSum(),
+                doubleSummaryStatistics.getMax(),
+                doubleSummaryStatistics.getMin(),
+                doubleSummaryStatistics.getAverage()
+        );
+    }
+
+    public double summarizeTransactions(final BankTransactionSummarizer bankTransactionSummarizer){
+        double result = 0;
+        for (final BankTransaction bankTransaction: bankTransactions){
+            result = bankTransactionSummarizer.summarize(result, bankTransaction);
+        }
+        return result;
     }
 
     public double calculateTotalInMonth(final Month month) {
-        return bankTransactions.stream()
-                .filter(e -> month.equals(e.getDate().getMonth()))
-                .mapToDouble(BankTransaction::getAmount).sum();
+        return summarizeTransactions((acc, bankTransaction) ->
+                bankTransaction.getDate().getMonth() == month ? acc + bankTransaction.getAmount() : acc);
     }
 
-    public double calculateTotalForCategory(String salary) {
-        return bankTransactions.stream()
-                .filter(e -> salary.equals(e.getDescription()))
-                .mapToDouble(BankTransaction::getAmount).sum();
+    public List<BankTransaction> findTransactionsGreaterThanEqual(final int amount) {
+        return findTransactions(bankTransaction -> bankTransaction.getAmount() >= amount);
     }
 
-    public OptionalDouble findHighestTransactionInMonth(final Month month){
-        return  bankTransactions.stream()
-                .filter(e -> month.equals(e.getDate().getMonth()))
-                .mapToDouble(BankTransaction::getAmount).max();
-    }
-
-    public Map<String, Double> totalAmountGroupedByDescription() {
-        return bankTransactions.stream()
-                .collect(groupingBy(BankTransaction::getDescription, summingDouble(BankTransaction::getAmount)));
-    }
-
-    public List<BankTransaction> findTransactions(final BankTransactionFilter bankTransactionFilter){
+    public List<BankTransaction> findTransactions(final BankTransactionFilter bankTransactionFilter) {
         return bankTransactions.stream().filter(bankTransactionFilter::test).toList();
     }
 
