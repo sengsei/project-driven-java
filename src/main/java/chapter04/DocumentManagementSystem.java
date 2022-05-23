@@ -38,4 +38,8 @@ public class DocumentManagementSystem {
         }
 
     }
+
+    public List<Document> contents() {
+        return documentsView;
+    }
 }
