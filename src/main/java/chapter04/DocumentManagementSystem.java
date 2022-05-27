@@ -12,6 +12,7 @@ public class DocumentManagementSystem {
 
     public DocumentManagementSystem() {
         extensionToImporter.put("jpg", new ImageImporter());
+        extensionToImporter.put("invoice", new InvoiceImporter());
     }
 
     public void importFile(final String path) throws IOException{
@@ -42,4 +43,6 @@ public class DocumentManagementSystem {
     public List<Document> contents() {
         return documentsView;
     }
+
+
 }
