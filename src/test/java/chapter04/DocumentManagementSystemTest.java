@@ -15,6 +15,7 @@ class DocumentManagementSystemTest {
     private static final String INVOICE = RESOURCES + "patient.invoice";
     private static final String ALICE = "Alice";
     private static final String LETTER = RESOURCES + "patient.letter";
+    private static final String REPORT = RESOURCES + "patient.report";
 
     private final DocumentManagementSystem system = new DocumentManagementSystem();
 
@@ -60,6 +61,22 @@ class DocumentManagementSystemTest {
                         "with Dr. Avaj from 29th December 2016 to 5th January 2017.");
         assertEquals(document.getAttributes(TYPE), "LETTER");
 
+    }
+
+    @Test
+    public void shouldImportReportAttributes() throws Exception{
+        system.importFile(REPORT);
+
+        final Document document = onlyDocument();
+
+        assertEquals(document.getAttributes(PATIENT), ALICE);
+        assertEquals(document.getAttributes(BODY),
+                """
+                        On 5th January 2017 I examined Joe's teeth.
+                        We discussed his switch from drinking Coke to Diet Coke.
+                        No new problems were noted with his teeth."""
+                        );
+        assertEquals(document.getAttributes(TYPE), "REPORT");
     }
 
     private Document onlyDocument()
