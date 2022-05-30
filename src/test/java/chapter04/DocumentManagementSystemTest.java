@@ -85,6 +85,11 @@ class DocumentManagementSystemTest {
         assertThrows(UnknownFileTypeException.class, () ->  system.importFile(UNKNOWN));
     }
 
+    @Test
+    public void shouldNotImportFileNotFound() throws Exception{
+        assertThrows(FileNotFoundException.class, () -> system.importFile("filenotfound.txt"));
+    }
+
     private Document onlyDocument() {
         final List<Document> documents = system.contents();
         return documents.get(0);
