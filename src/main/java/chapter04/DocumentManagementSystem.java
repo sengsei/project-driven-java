@@ -13,6 +13,7 @@ public class DocumentManagementSystem {
     public DocumentManagementSystem() {
         extensionToImporter.put("jpg", new ImageImporter());
         extensionToImporter.put("invoice", new InvoiceImporter());
+        extensionToImporter.put("letter", new LetterImporter());
     }
 
     public void importFile(final String path) throws IOException{
