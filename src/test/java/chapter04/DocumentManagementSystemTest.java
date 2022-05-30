@@ -3,6 +3,7 @@ package chapter04;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import static chapter04.Attributes.*;
@@ -16,23 +17,23 @@ class DocumentManagementSystemTest {
     private static final String ALICE = "Alice";
     private static final String LETTER = RESOURCES + "patient.letter";
     private static final String REPORT = RESOURCES + "patient.report";
+    private static final String UNKNOWN = RESOURCES + "unknown.txt";
 
     private final DocumentManagementSystem system = new DocumentManagementSystem();
 
     @Test
-    public void shouldImportImageAttributes() throws Exception
-    {
+    public void shouldImportImageAttributes() throws Exception {
         system.importFile(XRAY);
 
         final Document document = onlyDocument();
 
-        assertEquals(document.getAttributes(WIDTH),"320");
+        assertEquals(document.getAttributes(WIDTH), "320");
         assertEquals(document.getAttributes(HEIGHT), "179");
         assertEquals(document.getAttributes(TYPE), "IMAGE");
     }
 
     @Test
-    public void shouldImportInvoiceAttributes() throws Exception{
+    public void shouldImportInvoiceAttributes() throws Exception {
         system.importFile(INVOICE);
 
         final Document document = onlyDocument();
@@ -44,7 +45,7 @@ class DocumentManagementSystemTest {
     }
 
     @Test
-    public void shouldImportLetterAttributes() throws Exception{
+    public void shouldImportLetterAttributes() throws Exception {
         system.importFile(LETTER);
 
         final Document document = onlyDocument();
@@ -64,7 +65,7 @@ class DocumentManagementSystemTest {
     }
 
     @Test
-    public void shouldImportReportAttributes() throws Exception{
+    public void shouldImportReportAttributes() throws Exception {
         system.importFile(REPORT);
 
         final Document document = onlyDocument();
@@ -75,12 +76,16 @@ class DocumentManagementSystemTest {
                         On 5th January 2017 I examined Joe's teeth.
                         We discussed his switch from drinking Coke to Diet Coke.
                         No new problems were noted with his teeth."""
-                        );
+        );
         assertEquals(document.getAttributes(TYPE), "REPORT");
     }
 
-    private Document onlyDocument()
-    {
+    @Test
+    public void shouldNotImportMissingFile() throws Exception {
+        assertThrows(UnknownFileTypeException.class, () ->  system.importFile(UNKNOWN));
+    }
+
+    private Document onlyDocument() {
         final List<Document> documents = system.contents();
         return documents.get(0);
     }
